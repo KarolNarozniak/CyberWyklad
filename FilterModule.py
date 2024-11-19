@@ -16,8 +16,8 @@ class Filter:
         self.split_mark = r"------>\[.*?\]<------"
         self.text_chunks = []
         self.presentation_chunks = []
-        self.llm_url = "http://127.0.0.1:1234/v1"
-        self.api_key = "lm-stuido"
+        self.llm_url = "http://10.244.89.118:11434/v1"
+        self.api_key = "0"
         self.txt_for_LaTeX = ""
 
     def run(self):
@@ -51,12 +51,10 @@ class Filter:
         i = 0
         for txt in self.text_chunks:
             completion = client.chat.completions.create(
-                model="llama-3.2-1b-instruct",
+                model="llama3.2",
                 messages=[
                     {"role": "user", "content": f"List me the key points from this text: {txt}"}
                 ],
-                temperature=0.7,
-                max_tokens=300
             )
             self.txt_for_LaTeX += "\n\n"
             self.txt_for_LaTeX += self.presentation_chunks[i]
