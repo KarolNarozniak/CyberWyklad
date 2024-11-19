@@ -28,7 +28,8 @@ class Filter:
 
     def split_presentations(self):
         chunks = re.split(self.split_mark, self.profesor_input)
-        self.text_chunks = [chunks[i] + chunks[i + 1] for i in range(1, len(chunks) - 1, 2)]
+        self.text_chunks = [chunk.strip() for chunk in chunks if chunk.strip()]
+
 
     def extract_chunks_topics(self):
         self.presentation_chunks = re.findall(self.split_mark, self.profesor_input)
@@ -72,8 +73,8 @@ class Filter:
 
     # Komenda dla modułu TTS
     def get_presentations_splited(self):
-        # self.split_presentations()
-        return self.presentation_chunks
+        self.split_presentations()
+        return self.text_chunks
 
 
 if __name__ == "__main__":
@@ -85,5 +86,7 @@ if __name__ == "__main__":
         text_example = file.read()
 
     filter_agent = Filter(text_example)
+
+
     filter_output = filter_agent.run()
     print(filter_output)
