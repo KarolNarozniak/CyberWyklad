@@ -1,0 +1,5 @@
+Programowanie kwantowe polega na tworzeniu algorytmów działających na komputerach kwantowych, które wykorzystują prawa mechaniki kwantowej, takie jak superpozycja i splątanie.
+Języki programowania, takie jak Qiskit, Cirq czy Microsoft Q#, umożliwiają pisanie i symulację programów kwantowych na klasycznych komputerach przed uruchomieniem ich na maszynach kwantowych.
+Algorytmy kwantowe, takie jak algorytm Shora do faktoryzacji liczb lub algorytm Grovera do przeszukiwania baz danych, mogą rozwiązywać niektóre problemy znacznie szybciej niż algorytmy klasyczne.
+Programowanie kwantowe znajduje zastosowanie w dziedzinach takich jak kryptografia, optymalizacja, chemia obliczeniowa czy sztuczna inteligencja, oferując nowe podejście do rozwiązywania skomplikowanych problemów.
+Wyzwania w programowaniu kwantowym obejmują problemy związane z dekoherencją, błędami obliczeniowymi i skalowalnością, które ograniczają możliwości dzisiejszych komputerów kwantowych.

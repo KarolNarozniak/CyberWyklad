@@ -1,2 +1,6 @@
 # PyCharm IDE default folder
 .idea/
+
+# TTS audio folders
+/text_to_speech_module/backup_audio_parts
+/text_to_speech_module/presentation_audio_parts
