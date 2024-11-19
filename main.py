@@ -1,5 +1,6 @@
 from FilterModule import Filter
 from latex_module import Latex_module
+from TextToSpeechModule import TextToSpeechModule
 
 text_example = """------>[cos]<------
 Wstęp: Czym jest informatyka kwantowa?
@@ -75,6 +76,10 @@ Dziękuję Państwu za uwagę i zachęcam do zadawania pytań!"""
 filter_agent = Filter(text_example)
 filter_output = filter_agent.run()
 print(filter_output)
+PRESENTATION_AUDIO_DIR = 'presentation_audio_parts'
+BACKUP_AUDIO_DIR = 'backup_audio_parts'
+text_to_speech_module = TextToSpeechModule(text_example, PRESENTATION_AUDIO_DIR, BACKUP_AUDIO_DIR)
+text_to_speech_module.generate_tts_audio()
 latex_module = Latex_module(filter_output, "llama3.2", "output", base_url="http://10.244.89.118:11434/v1")
 latex_code = latex_module.get_latex()
 latex_module.generate_pngs(latex_code)
