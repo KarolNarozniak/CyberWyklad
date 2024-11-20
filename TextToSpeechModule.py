@@ -6,8 +6,7 @@ from datetime import datetime
 from typing import List
 
 import FilterModule
-
-import pyttsx3
+from piper_tts import PiperTTS
 
 
 class TextToSpeechModule:
@@ -17,10 +16,11 @@ class TextToSpeechModule:
     def __init__(self, input_text: str, audio_dir: str, backup_audio_dir: str,
                  audio_file_prefix: str, llm_model_name: str, llm_base_url: str) -> None:
         # setup TTS engine
-        self.engine = pyttsx3.init()
-        self.engine.setProperty('rate', 150)
-        self.engine.setProperty('volume', 0.9)
-        self.engine.setProperty('voice', self.engine.getProperty('voices')[0].id)
+        self.engine = PiperTTS('https://piper-tts.rosowski.me/speech/')
+        # self.engine = pyttsx3.init()
+        # self.engine.setProperty('rate', 150)
+        # self.engine.setProperty('volume', 0.9)
+        # self.engine.setProperty('voice', self.engine.getProperty('voices')[0].id)
         self.input_text = input_text
         self.audio_file_prefix = audio_file_prefix
         self.audio_dir = audio_dir
@@ -62,7 +62,7 @@ class TextToSpeechModule:
         print("Saving text:")
         print(text)
         self.engine.save_to_file(text, os.path.join(self.audio_dir, out_file))
-        self.engine.runAndWait()
+        # self.engine.runAndWait()
 
     def generate_tts_audio(self) -> None:
         """ Get the text for Lecturer and generate his speak recording """
@@ -71,7 +71,7 @@ class TextToSpeechModule:
         filtered_presentation_texts = self.filter_text(self.input_text)
 
         for i, self.input_text in enumerate(filtered_presentation_texts):
-            self.save_recording(self.input_text, f'{self.audio_file_prefix}_{i + 1}.mp3')
+            self.save_recording(self.input_text, f'{self.audio_file_prefix}_{i + 1}.wav')
 
 
 if __name__ == '__main__':

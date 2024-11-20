@@ -1,4 +1,3 @@
 pdf2image~=1.17.0
 openai~=1.54.5
 ffmpeg-python
-pyttsx3

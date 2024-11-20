@@ -18,7 +18,7 @@ class FfmpegModule:
         # Assuming the number of audio and image files are the same and indexed from 1
         index = 1
         while True:
-            audio_file = os.path.join(self.audio_dir, f"{self.audio_file_prefix}_{index}.mp3")
+            audio_file = os.path.join(self.audio_dir, f"{self.audio_file_prefix}_{index}.wav")
             image_file = os.path.join(self.images_dir, f"{self.image_file_prefix}_{index}.png")
 
             if not os.path.exists(audio_file) or not os.path.exists(image_file):

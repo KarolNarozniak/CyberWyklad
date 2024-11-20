@@ -1,8 +1,6 @@
 import os
 import shutil
 
-from openai import audio
-
 from FilterModule import Filter
 from ffmpeg_module import FfmpegModule
 from latex_module import LatexModule
@@ -90,8 +88,8 @@ def main():
     AUDIO_OUTPUT_DIR = "audio_output"
     IMAGE_OUTPUT_DIR = "image_output"
     BACKUP_AUDIO_DIR = 'backup_audio_parts'
-    LLM_MODEL_NAME = "NousResearch/Hermes-3-Llama-3.1-8B-GGUF"
-    LLM_BASE_URL = "http://localhost:1234/v1"
+    LLM_MODEL_NAME = "llama3.1"
+    LLM_BASE_URL = "https://ollama.rosowski.me/v1"
 
     AUDIO_FILE_PREFIX = "slide"
     IMAGE_FILE_PREFIX = "slide"
