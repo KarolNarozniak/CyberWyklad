@@ -8,17 +8,16 @@ Dane są dzielone na podstawie znacznika, obecny znacznik to "------>[cos]<-----
 cos - to domyślnie bedzie temat prezentacji
 '''
 
-
 class Filter:
-    def __init__(self, profesor_input):
+    def __init__(self, profesor_input: str, model_name: str, **openai_client_args) -> None:
         self.profesor_input = profesor_input
         # znacznik: # ------>[tytuł slajdu]<------
         self.split_mark = r"------>\[.*?\]<------"
         self.text_chunks = []
         self.presentation_chunks = []
-        self.llm_url = "http://10.244.89.118:11434/v1"
-        self.api_key = "0"
         self.txt_for_LaTeX = ""
+        self.openai_client_args = openai_client_args
+        self.model_name = model_name
 
     def run(self):
         self.split_presentations()
@@ -47,11 +46,11 @@ class Filter:
     '''
 
     def write_in_points_text_chunk(self):
-        client = OpenAI(base_url=self.llm_url, api_key=self.api_key)
+        client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'), **self.openai_client_args)
         i = 0
         for txt in self.text_chunks:
             completion = client.chat.completions.create(
-                model="llama3.2",
+                model=self.model_name,
                 messages=[
                     {"role": "user", "content": f"List me the key points from this text: {txt}"}
                 ],

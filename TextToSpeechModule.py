@@ -14,16 +14,19 @@ class TextToSpeechModule:
     """ Class responsible for converting text to speech. It takes text file with lecture content and converts it to
     audio files with a speech"""
 
-    def __init__(self, input_text: str, audio_dir: str, backup_audio_dir: str) -> None:
+    def __init__(self, input_text: str, audio_dir: str, backup_audio_dir: str,
+                 audio_file_prefix: str, llm_model_name: str, llm_base_url: str) -> None:
         # setup TTS engine
         self.engine = pyttsx3.init()
         self.engine.setProperty('rate', 150)
         self.engine.setProperty('volume', 0.9)
         self.engine.setProperty('voice', self.engine.getProperty('voices')[0].id)
         self.input_text = input_text
-
+        self.audio_file_prefix = audio_file_prefix
         self.audio_dir = audio_dir
         self.backup_audio_dir = backup_audio_dir
+        self.llm_model_name = llm_model_name
+        self.llm_base_url = llm_base_url
 
     def backup_audio_folder(self) -> None:
         """ Backup audio folder to clear it for new audio """
@@ -51,7 +54,7 @@ class TextToSpeechModule:
 
     def filter_text(self, text: str) -> List[str]:
         """ Filter text """
-        filter_fs = FilterModule.Filter(text)
+        filter_fs = FilterModule.Filter(text, self.llm_model_name, base_url=self.llm_base_url)
         return filter_fs.get_presentations_splited()
 
     def save_recording(self, text: str, out_file: str) -> None:
@@ -68,7 +71,7 @@ class TextToSpeechModule:
         filtered_presentation_texts = self.filter_text(self.input_text)
 
         for i, self.input_text in enumerate(filtered_presentation_texts):
-            self.save_recording(self.input_text, f'presentation_number_{i + 1}.mp3')
+            self.save_recording(self.input_text, f'{self.audio_file_prefix}_{i + 1}.mp3')
 
 
 if __name__ == '__main__':

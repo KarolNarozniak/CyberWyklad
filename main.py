@@ -1,5 +1,11 @@
+import os
+import shutil
+
+from openai import audio
+
 from FilterModule import Filter
-from latex_module import Latex_module
+from ffmpeg_module import FfmpegModule
+from latex_module import LatexModule
 from TextToSpeechModule import TextToSpeechModule
 
 text_example = """------>[cos]<------
@@ -73,13 +79,37 @@ naszego życia. Ale już dziś możemy obserwować, jak te technologie zaczynaj�
 chemia czy nawet sztuczna inteligencja.
 
 Dziękuję Państwu za uwagę i zachęcam do zadawania pytań!"""
-filter_agent = Filter(text_example)
-filter_output = filter_agent.run()
-print(filter_output)
-PRESENTATION_AUDIO_DIR = 'presentation_audio_parts'
-BACKUP_AUDIO_DIR = 'backup_audio_parts'
-text_to_speech_module = TextToSpeechModule(text_example, PRESENTATION_AUDIO_DIR, BACKUP_AUDIO_DIR)
-text_to_speech_module.generate_tts_audio()
-latex_module = Latex_module(filter_output, "llama3.2", "output", base_url="http://10.244.89.118:11434/v1")
-latex_code = latex_module.get_latex()
-latex_module.generate_pngs(latex_code)
+
+def cleanup(audio_dir: str, image_dir: str):
+    if os.path.exists(audio_dir):
+        shutil.rmtree(audio_dir)
+    if os.path.exists(image_dir):
+        shutil.rmtree(image_dir)
+
+def main():
+    AUDIO_OUTPUT_DIR = "audio_output"
+    IMAGE_OUTPUT_DIR = "image_output"
+    BACKUP_AUDIO_DIR = 'backup_audio_parts'
+    LLM_MODEL_NAME = "NousResearch/Hermes-3-Llama-3.1-8B-GGUF"
+    LLM_BASE_URL = "http://localhost:1234/v1"
+
+    AUDIO_FILE_PREFIX = "slide"
+    IMAGE_FILE_PREFIX = "slide"
+
+    cleanup(AUDIO_OUTPUT_DIR, IMAGE_OUTPUT_DIR)
+
+    filter_agent = Filter(text_example, LLM_MODEL_NAME, base_url=LLM_BASE_URL)
+    filter_output = filter_agent.run()
+    print(filter_output)
+    text_to_speech_module = TextToSpeechModule(text_example, AUDIO_OUTPUT_DIR, BACKUP_AUDIO_DIR, AUDIO_FILE_PREFIX,
+                                                  LLM_MODEL_NAME, LLM_BASE_URL)
+    text_to_speech_module.generate_tts_audio()
+    latex_module = LatexModule(filter_output, LLM_MODEL_NAME, IMAGE_FILE_PREFIX, IMAGE_OUTPUT_DIR,
+                               base_url=LLM_BASE_URL)
+    latex_module.run()
+
+    ffmpeg_module = FfmpegModule("output.mp4", AUDIO_OUTPUT_DIR, IMAGE_OUTPUT_DIR, AUDIO_FILE_PREFIX, IMAGE_FILE_PREFIX)
+    ffmpeg_module.generate_video()
+
+if __name__ == "__main__":
+    main()
