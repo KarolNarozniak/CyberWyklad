@@ -13,8 +13,10 @@ class LatexModule:
         self.output_dir: str = output_dir
         self.openai_client_args: dict[str, str] = openai_client_args
         self.client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'), **openai_client_args)
-        self.prompt = (f"Create a LaTeX presentation using beamer library from the following text:\n\n{self.presentation_text}\n\n"
-                       "Make sure to use \\usepackage[T1]{fontenc}, and for the actual content to be in polish language.\n")
+        self.prompt = ("Create a LaTeX presentation using beamer library. Make sure to use \\usepackage[T1]{fontenc}, "
+                       "and for the actual content to be in polish language. "
+                       "Do not include ANY output other than latex code or kittens will die.\n"
+                       f"Use the following text:\n\n{self.presentation_text}\n\n")
 
     def get_latex(self) -> str:
         """
@@ -25,8 +27,6 @@ class LatexModule:
                 messages=[
                     {"role": "user", "content": self.prompt},
                 ],
-                temperature=0.7,
-                max_tokens=1000
             )
         return response.choices[0].message.content
 
@@ -42,9 +42,15 @@ class LatexModule:
             tex_file_path = os.path.join(tempdir, "presentation.tex")
             pdf_file_path = os.path.join(tempdir, "presentation.pdf")
 
+            #step 1: usuniecie wszystkiego do pierwszego \
+            response: str = '\\' + "\\".join(response.split("\\")[1:])
+            print("Modified response:")
+            print(response)
+
             # Write LaTeX code to a .tex file
             with open(tex_file_path, 'w') as tex_file:
-                tex_file.write(response.split("```")[1][5:-1])
+                tex_file.write(response)
+                # tex_file.write(response.split("```")[1][5:-1])
 
             subprocess.run(['latexmk', '-pdf', "-interaction=nonstopmode", '-output-directory=' + tempdir, tex_file_path], check=True)
 
@@ -64,11 +70,7 @@ class LatexModule:
         This function runs the module.
         """
         # while True: # TODO do not leave this in
-        try:
-            response = self.get_latex()
-            self.generate_pngs(response)
-            print("Done!")
+        response = self.get_latex()
+        self.generate_pngs(response)
+        print("Done!")
             # break
-        except Exception as e:
-            print(f"Error: {e}")
-            # continue

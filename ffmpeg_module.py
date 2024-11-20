@@ -36,3 +36,12 @@ class FfmpegModule:
         # Merge video and audio streams
         output = ffmpeg.output(video_concat, audio_concat, self.output_filename, **self.ffmpeg_args)
         ffmpeg.run(output)
+
+if __name__ == "__main__":
+    AUDIO_OUTPUT_DIR = "audio_output"
+    IMAGE_OUTPUT_DIR = "image_output"
+    AUDIO_FILE_PREFIX = "slide"
+    IMAGE_FILE_PREFIX = "slide"
+
+    ffmpeg_module = FfmpegModule("output.mp4", AUDIO_OUTPUT_DIR, IMAGE_OUTPUT_DIR, AUDIO_FILE_PREFIX, IMAGE_FILE_PREFIX)
+    ffmpeg_module.generate_video()
