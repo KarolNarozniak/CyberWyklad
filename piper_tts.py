@@ -6,7 +6,7 @@ class PiperTTS:
         self.url = url
 
     def get_audio(self, text: str) -> bytes:
-        response = requests.post(self.url, data="{text: "+"text}"+"}")
+        response = requests.post(self.url, data='{"text": "'+f'{text.strip()}'+'}')
         return response.content
 
     def save_to_file(self, text: str, file_path: str) -> None:
