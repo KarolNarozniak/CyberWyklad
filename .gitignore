@@ -1,2 +1,3 @@
 # PyCharm IDE default folder
 .idea/
+app/.env
